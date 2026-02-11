@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<!-- 核心：适配手机屏幕，保证操作流畅 -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>极简备忘录</title>
+<style>
+    /* 全局样式：仿苹果备忘录极简风格 */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+    }
+    body {
+        background-color: #f5f5f7;
+        padding: 15px;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    /* 标题样式 */
+    h1 {
+        color: #1d1d1f;
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+    /* 搜索框样式 */
+    .search-box {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    .search-input {
+        flex: 1;
+        padding: 12px 15px;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        font-size: 1rem;
+        background: white;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .search-btn, .save-btn {
+        padding: 0 20px;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        cursor: pointer;
+        color: white;
+    }
+    .search-btn {
+        background-color: #0071e3; /* 苹果蓝 */
+    }
+    /* 新增备忘录输入框 */
+    .add-memo {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+    }
+    .memo-input {
+        flex: 1;
+        padding: 15px;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        font-size: 1rem;
+        min-height: 100px;
+        resize: none;
+        background: white;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .save-btn {
+        background-color: #34c759; /* 苹果绿 */
+    }
+    /* 备忘录列表样式 */
+    .memo-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .memo-item {
+        background: white;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .memo-content {
+        color: #1d1d1f;
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 8px;
+    }
+    .memo-time {
+        color: #86868b;
+        font-size: 0.85rem;
+    }
+    /* 空状态样式 */
+    .empty-tip {
+        text-align: center;
+        color: #86868b;
+        font-size: 1rem;
+        margin-top: 50px;
+    }
+    /* 按钮点击反馈 */
+    button:active {
+        opacity: 0.8;
+    }
+    /* 适配小屏手机 */
+    @media (max-width: 400px) {
+        h1 {
+            font-size: 1.5rem;
+        }
+        .search-btn, .save-btn {
+            padding: 0 15px;
+        }
+    }
+</style>
+
+<div class="container">
+    <!-- 标题 -->
+    <h1>极简备忘录</h1>
+
+    <!-- 搜索框 -->
+    <form class="search-box" method="get">
+        <input 
+            type="text" 
+            class="search-input" 
+            name="keyword" 
+            placeholder="输入关键字搜索..." 
+            value="{{ keyword }}"
+        >
+        <button type="submit" class="search-btn">搜索</button>
+    </form>
+
+    <!-- 新增备忘录 -->
+    <form class="add-memo" method="post">
+        <textarea 
+            class="memo-input" 
+            name="content" 
+            placeholder="输入要记录的内容...（支持换行）"
+        ></textarea>
+        <button type="submit" class="save-btn">保存</button>
+    </form>
+
+    <!-- 备忘录列表 -->
+    <div class="memo-list">
+        {% if memos %}
+            {% for memo in memos %}
+                <div class="memo-item">
+                    <div class="memo-content">{{ memo.content }}</div>
+                    <div class="memo-time">{{ memo.create_time }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-tip">
+                {% if keyword %}
+                    未找到包含「{{ keyword }}」的备忘录
+                {% else %}
+                    暂无记录，输入内容开始记录吧 ✍️
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
